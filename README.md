@@ -7,9 +7,11 @@ This JS library has a lot of useful and powerful JS, PHP, and API functions that
 
  
 ```javascript
-$.api.UserLoc( $('YourDivObjElementID') ); // will create divs within YourDivObjElementID containing data like: ip,city,lat,lon, and etc
+// will create divs within YourDivObjElementID containing data like: ip,city,lat,lon, and etc
+$.api.UserLoc( $('YourDivObjElementID') ); 
 
-$.api.IsMobile($('YourDivObjElementID') ); // will create divs within YourDivObjElementID containing data like: Mobile(yes or no),Browser,BrowserVersionNum,Platform
+/ will create divs within YourDivObjElementID containing data like: Mobile(yes or no),Browser,BrowserVersionNum,Platform
+$.api.IsMobile($('YourDivObjElementID') ); /
 
 $.js.IsOnline(); // will return online or offline
 $.js.GetDirPath (); 
