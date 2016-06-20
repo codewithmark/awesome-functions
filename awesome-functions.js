@@ -1,5 +1,6 @@
 /*
  * Library Name: Awesome Functions
+ * Version Number: 2016.06.19
  * Original Author: Mark Kumar
  * Documentation: http://codewithmark.com/awesome-functions
  * Licensed under the MIT license
@@ -7,9 +8,10 @@
   
 ;(function ( $, window, document, undefined ) 
 {
+
 	 
 }( jQuery, window, document));
-
+ 
   //Function initiator 
   api = function(){};  
   php = function(){};  
@@ -24,6 +26,10 @@
   //For login form
   frm =function(){}; 
 
+
+
+ 
+
 //--->API Call Functions - Start
 
   //--->User Location Info Function - Start
@@ -32,7 +38,7 @@
     var LocDataArr = [];
    
     //Make the api call
-    $.getJSON("//apimk.com/ip?callback=json", function(data, status)
+    jQuery.getJSON("//apimk.com/ip?callback=json", function(data, status)
     {   
       //Add user loc data to div      
       UserElementObj.append('<div class="LocStatus">'+data['status'] +'</div>');
@@ -71,7 +77,7 @@
   {
     var LocDataArr = [];
     //Make the api call
-    $.getJSON("//apimk.com/ismobile?callback=json", function(data, status)
+    jQuery.getJSON("//apimk.com/ismobile?callback=json", function(data, status)
     {   
       //Add user loc data to div      
       UserElementObj.append('<div class="MobileStatus">'+data['Status'] +'</div>');
@@ -104,7 +110,7 @@
 //--->PHP Functions - Start  
    
   //--->Microtime Function - Start
-  php.Microtime = function(getAsFloat)   
+  php.microtime = function(getAsFloat)   
   {
     var s
     var now
@@ -133,7 +139,7 @@
   
   
   //--->UniqueID Function - Start   
-  php.UniqueID = function(prefix, more_entropy)    
+  php.uniqid = function(prefix, more_entropy)    
   {
     //   example 1: uniqid();
     //   returns 1: 'a30285b160c14'
@@ -189,7 +195,75 @@
     return retId
   }
   //--->UniqueID Function - End
-    
+  
+  php.str_replace = function  (search, replace, string_containing_text, countObj) 
+  {
+    //   example 1: str_replace(' ', '.', 'Kevin van Zonneveld')
+    //   returns 1: 'Kevin.van.Zonneveld'
+    //   example 2: str_replace(['{name}', 'l'], ['hello', 'm'], '{name}, lars')
+    //   returns 2: 'hemmo, mars'
+    //   example 3: str_replace(Array('S','F'),'x','ASDFASDF')
+    //   returns 3: 'AxDxAxDx'
+    //   example 4: var countObj = {}
+    //   example 4: str_replace(['A','D'], ['x','y'] , 'ASDFASDF' , countObj)
+    //   example 4: var $result = countObj.value
+    //   returns 4: 4
+
+
+
+    var i = 0
+    var j = 0
+    var temp = ''
+    var repl = ''
+    var sl = 0
+    var fl = 0
+    var f = [].concat(search)
+    var r = [].concat(replace)
+    var s = string_containing_text
+    var ra = Object.prototype.toString.call(r) === '[object Array]'
+    var sa = Object.prototype.toString.call(s) === '[object Array]'
+    s = [].concat(s)
+
+    var $global = (typeof window !== 'undefined' ? window : GLOBAL)
+    $global.$locutus = $global.$locutus || {}
+    var $locutus = $global.$locutus
+    $locutus.php = $locutus.php || {}
+
+    if (typeof (search) === 'object' && typeof (replace) === 'string') {
+      temp = replace
+      replace = []
+      for (i = 0; i < search.length; i += 1) {
+        replace[i] = temp
+      }
+      temp = ''
+      r = [].concat(replace)
+      ra = Object.prototype.toString.call(r) === '[object Array]'
+    }
+
+    if (typeof countObj !== 'undefined') {
+      countObj.value = 0
+    }
+
+    for (i = 0, sl = s.length; i < sl; i++) {
+      if (s[i] === '') {
+        continue
+      }
+      for (j = 0, fl = f.length; j < fl; j++) {
+        temp = s[i] + ''
+        repl = ra ? (r[j] !== undefined ? r[j] : '') : r[0]
+        s[i] = (temp).split(f[j]).join(repl)
+        if (typeof countObj !== 'undefined') {
+          countObj.value += ((temp.split(f[j])).length - 1)
+        }
+      }
+    }
+
+    return sa ? s : s[0]
+  }
+
+
+
+
     
 
 //--->PHP Functions - End
@@ -200,7 +274,7 @@
 
   js.AjaxCall = function (AjaxCallURL,DataString,CallType,Callback)
   {  
-    return $.ajax(
+    return jQuery.ajax(
     {
       type: "POST",
       url: AjaxCallURL,
@@ -229,7 +303,7 @@
   js.ChangePageTitle =  function (strNewPageTitle)
   {  
     //This will change the title of the page dynamically
-    var stTitle = $(document).attr("title", strNewPageTitle); 
+    var stTitle = jQuery(document).attr("title", strNewPageTitle); 
   }
 
   js.GetDateTime = function (value,DateFormatType) 
@@ -315,7 +389,7 @@
     countTextBox.after('<br><span name="countchars" id="'+counterid+'">0</span> Characters Remaining.');
 
     // Remaining chars count will be displayed here
-    var charsCountEl  = $('#'+counterid); 
+    var charsCountEl  = jQuery('#'+counterid); 
     //initial value of countchars element
     charsCountEl.text(totalChars); 
     countTextBox.keyup(function() 
@@ -382,6 +456,103 @@
         return $1.toUpperCase();
       });
   }
+
+  js.SEO = function (TurnOffCheck) 
+  {
+
+    if(TurnOffCheck)
+    {
+      return false;
+    }
+
+    //--->Hide dl link info - Start
+    jQuery("a").mouseover(function()
+    {
+      var LocSite = location.hostname;
+      var HrefLinkSite = this.hostname;
+       var GetDLLink = jQuery(this).attr('data-dl-link');
+      if(GetDLLink) 
+      {         
+        jQuery(this).attr("href",js.AutoCode(5) );
+      }        
+    });
+    //--->Hide dl link info - End
+
+    //--->Add awesome font download icon - Start
+    var DLExt = ["zip", "rar", "mp3","mpe" ,"pdf", "docx", "pptx", "xlsx"];
+
+    jQuery("a").filter(function() 
+    {
+        var FollowCheck = jQuery(this).attr('follow');      
+        var LocSite = location.hostname;
+        var HrefLinkSite = this.hostname;
+
+        if(LocSite != HrefLinkSite)
+        { 
+          var href = jQuery(this).attr('href');
+
+          var GetFileExt = href.split('.').pop().toLowerCase();
+
+          //Regular external link
+          if(jQuery.inArray(GetFileExt, DLExt) == -1) 
+          { 
+            if(FollowCheck !='yes')
+            {
+              //See if it has bootstrap button class
+              var BtnClass = jQuery(this).hasClass('btn');
+
+              //Awsome Font Class
+              var FaClass = jQuery(this).hasClass('fa');
+
+              if(BtnClass || FaClass)
+              {
+                jQuery(this).attr(
+                {
+                  target: '_blank',
+                  rel: 'nofollow'
+                });
+              }
+              else
+              {
+                jQuery(this).after(' <i class="fa fa-external-link" style="font-size:10px; Position:relative; top: -5px;"></i>').attr(
+                {
+                  target: '_blank',
+                  rel: 'nofollow'
+                });
+              }
+
+            }
+            else if(FollowCheck =='yes')
+            {
+              jQuery(this).after(' <i class="fa fa-external-link" style="font-size:10px; Position:relative; top: -5px;"></i>').attr(
+                {
+                target: '_blank'                  
+                });
+            }
+          }
+          //Download file ext
+          else if(jQuery.inArray(GetFileExt, DLExt) != -1) 
+          {  
+            //$j(this).after(' <i class="fa fa-download " style="font-size:20px; Position:relative; top: -2px;"></i> ')
+            jQuery(this).attr(
+            {
+                  href:"mkdl",
+                  download: "download",
+                  MKAwesomeThemeTooltip :'MKAwesomeThemeTooltip',
+              });
+              jQuery(this).attr('data-dl-link', href);
+          }  
+        }
+    });
+    //--->Add awesome font download icon - Start
+
+
+  }
+
+
+
+
+
 
 //--->JS Functions - End
 
@@ -793,11 +964,5 @@
     {
       return value;
     }
-  }
-
-
-
-  
-
-//--->Form Functions - Start
-
+  } 
+//--->Form Functions - End
