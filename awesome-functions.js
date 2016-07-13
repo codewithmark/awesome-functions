@@ -2,7 +2,7 @@
  * Library Name: Awesome Functions
  * Version Number: 16.7.13
  * Original Author: Mark Kumar
- * Documentation: http://codewithmark.com/awesome-functions
+ * Documentation: http://awesomefunctions.com
  * Licensed under the MIT license
  */
 
