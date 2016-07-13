@@ -31,14 +31,21 @@
   //--->User Location Info Function - Start
   api.UserLoc = function(callback) 
   {
+    var deferred = new jQuery.Deferred(); 
+    if (jQuery.isFunction(callback)) 
+    {
+      deferred.then(callback);
+    }
+ 
     var LocDataArr = [];
    	var IPCheck = c.Get('LocIP');
 		
 		if(IPCheck)
 		{ 
-      callback( ls.GetObj("LocIP") );
+      deferred.resolve(ls.GetObj("LocIP") );
+      //callback( ls.GetObj("LocIP") );
 		}
-		else if(!IPCheck)
+    if(!IPCheck)
 		{
 			//Make the api call
 			jQuery.getJSON("https://apimk.com/ip?callback=json", function(data, status)
@@ -70,10 +77,13 @@
 
         ls.AddObj("LocIP",DataArr);
 
-        callback(DataArr);
+        //callback(DataArr);
+        deferred.resolve(LocDataArr);
 
 			});
+      
 		}
+    return deferred.promise();
   };
 
   //--->User Location Info Function - End
@@ -83,7 +93,19 @@
   //--->User Device Access Function - Start
   api.IsMobile = function(callback)   
   {
+    var deferred = new jQuery.Deferred(); 
+    if (jQuery.isFunction(callback)) 
+    {
+      deferred.then(callback);
+    }
+ 
     var LocDataArr;
+    
+    if(ls.GetObj("LocData") )
+    { 
+      deferred.resolve(ls.GetObj("LocData") );
+    }
+
     //Make the api call
     jQuery.getJSON("https://apimk.com/ismobile?callback=json", function(data, status)
     { 
@@ -96,9 +118,14 @@
         'BrowserVersionNum':data['BrowserVersionNum'],
         'Platform':data['Platform'], 
       } 
-      callback(LocDataArr) ;
+      //callback(data) ;
+
+      ls.AddObj("LocData",LocDataArr);
+
+      deferred.resolve(LocDataArr);
       
     }); 
+    return deferred.promise();
   }; 
 
   //--->User Device Access Function - End  
@@ -1168,8 +1195,6 @@
     template += '</div>';   
     return template;
   }
-
-
 //--->Bootstrap Functions - End
 
 
