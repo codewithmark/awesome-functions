@@ -39,13 +39,32 @@
  
     var LocDataArr = [];
    	var IPCheck = c.Get('LocIP');
-		
-		if(IPCheck)
-		{ 
-      deferred.resolve(ls.GetObj("LocIP") );
-      //callback( ls.GetObj("LocIP") );
-		}
-    if(!IPCheck)
+ 
+    if(IPCheck)
+    {       
+      if (ls.Exist ("LocIP"))
+      {
+        deferred.resolve(ls.GetObj("LocIP") );
+      }
+      else if(!ls.Exist ("LocIP"))
+      {
+        DataArr = { 
+          'LocStatus':c.Get('LocStatus'),
+          'LocIP':c.Get('LocIP'),
+          'LocCity':c.Get('LocCity'),
+          'LocState':c.Get('LocState'),
+          'LocCountry':c.Get('LocCountry'),
+          'LocZip':c.Get('LocZip'),
+          'LocLat':c.Get('LocLat'),
+          'LocLong':c.Get('LocLong'),
+          'LocTimeZone':c.Get('LocTimeZone') ,
+        } 
+        ls.AddObj("LocIP",DataArr);
+ 
+        deferred.resolve(DataArr);
+      } 
+    }
+    else if(!IPCheck)
 		{
 			//Make the api call
 			jQuery.getJSON("https://apimk.com/ip?callback=json", function(data, status)
@@ -75,6 +94,8 @@
 					'LocTimeZone':data['timezone'] ,
 				}
 
+        c.Add('DataIP',JSON.stringify(DataArr));
+
         ls.AddObj("LocIP",DataArr);
 
         //callback(DataArr);
@@ -99,30 +120,52 @@
       deferred.then(callback);
     }
  
-    var LocDataArr;
+    var DataArr;
     
-    if(ls.GetObj("LocData") )
+    if(ls.GetObj("MobileData") )
     { 
-      deferred.resolve(ls.GetObj("LocData") );
+      deferred.resolve(ls.GetObj("MobileData") );
     }
+    else if(!ls.Exist ("MobileData"))
+    { 
+      DataArr = { 
+        'Mobile':c.Get('Mobile'),
+        'Browser':c.Get('Browser'),
+        'BrowserVersionNum':c.Get('BrowserVersionNum'),
+        'Platform':c.Get('Platform'),
+      }
+
+      ls.AddObj("MobileData",DataArr);
+
+      //callback(DataArr);
+      deferred.resolve(DataArr);
+    }
+
+      
 
     //Make the api call
     jQuery.getJSON("https://apimk.com/ismobile?callback=json", function(data, status)
     { 
+        //Add cookies 
+        c.Add('Mobile',data['Mobile'] );
+        c.Add('Browser',data['Browser'] );
+        c.Add('BrowserVersionNum',data['BrowserVersionNum'] );
+        c.Add('Platform',data['Platform'] ); 
+ 
       //Wrap it in an array in case you want to customize this to your liking
-      LocDataArr =
+      DataArr =
       { 
         'Status':data['Status'],
         'Mobile':data['Mobile'],
         'Browser':data['Browser'],
         'BrowserVersionNum':data['BrowserVersionNum'],
         'Platform':data['Platform'], 
-      } 
-      //callback(data) ;
+      }  
+      c.Add('DataMobile',JSON.stringify(DataArr));
 
-      ls.AddObj("LocData",LocDataArr);
+      ls.AddObj("MobileData",DataArr);
 
-      deferred.resolve(LocDataArr);
+      deferred.resolve(DataArr);
       
     }); 
     return deferred.promise();
@@ -224,32 +267,7 @@
     return retId
   }
   //--->UniqueID Function - End
-  js.str_replace = function(ObjArr,StringData) 
-  {
-    /*
-      var ObjArr ={"{ClassName}":"MkClass2", "{UserName}":"Code With Mark", "{Test}":"Awesome Funtions"};
-      var strContent = <div class="MKClass">
-                        <div class=" {ClassName}"> Hello my name is : {UserName} and I like {Test}</div>
-                      </div>
-      var c = js.str_replace   (ObjArr, strContent  ) ;
 
-      will return:
-
-    <div class="MKClass">
-      <div class=" MkClass2"> Hello my name is : Code With Mark and I like Awesome Funtions</div>
-    </div>
-
-    */    
-    var Arr1 = [] ;
-    var Arr2 = [] ;
-    
-    jQuery.each(ObjArr, function(search, replace) 
-    {
-      Arr1.push(search);
-      Arr2.push(replace);
-    });
-    return php.str_replace(Arr1, Arr2, StringData) ; 
-  }
 
   php.str_replace = function  (search, replace, string_containing_text, countObj) 
   {
@@ -318,6 +336,33 @@
 
 
 //--->JS Functions - Start
+
+  js.Template = function(ObjArr,StringData) 
+  {
+    /*
+      var ObjArr ={"{ClassName}":"MkClass2", "{UserName}":"Code With Mark", "{Test}":"Awesome Funtions"};
+      var strContent = <div class="MKClass">
+                        <div class=" {ClassName}"> Hello my name is : {UserName} and I like {Test}</div>
+                      </div>
+      var c = js.str_replace   (ObjArr, strContent  ) ;
+
+      will return:
+
+    <div class="MKClass">
+      <div class=" MkClass2"> Hello my name is : Code With Mark and I like Awesome Funtions</div>
+    </div>
+
+    */    
+    var Arr1 = [] ;
+    var Arr2 = [] ;
+    
+    jQuery.each(ObjArr, function(search, replace) 
+    {
+      Arr1.push(search);
+      Arr2.push(replace);
+    });
+    return php.str_replace(Arr1, Arr2, StringData) ; 
+  }
 
   js.AjaxCall = function (AjaxCallURL,DataString,CallType,Callback)
   {  
