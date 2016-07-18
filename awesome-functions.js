@@ -1,6 +1,6 @@
 /*
  * Library Name: Awesome Functions
- * Version Number: 16.7.13
+ * Version Number: 16.7.18
  * Original Author: Mark Kumar
  * Documentation: http://awesomefunctions.com
  * Licensed under the MIT license
@@ -140,8 +140,6 @@
       //callback(DataArr);
       deferred.resolve(DataArr);
     }
-
-      
 
     //Make the api call
     jQuery.getJSON("https://apimk.com/ismobile?callback=json", function(data, status)
@@ -847,14 +845,8 @@
   */
 
   //--->Store single row - Start
- 
-
-  ls.AddObj = function (LookUpIndexKey,ObjVal) 
-  { 
-    localStorage.setItem(LookUpIndexKey,JSON.stringify(ObjVal));
-  }
   
-  ls.AppendObj = function (LookUpIndexKey,ObjVal) 
+  ls.AddObj= function (LookUpIndexKey,ObjVal) 
   { 
     //Check to see if there is already data in the IndexedKey/Table
     var OldRowData =  JSON.parse( localStorage.getItem(LookUpIndexKey) ) 
@@ -885,23 +877,19 @@
   
   ls.AddArr = function (LookUpIndexKey,ArrVal) 
   { 
-    localStorage.setItem(LookUpIndexKey,JSON.stringify(ArrVal));
-  }
-
-  ls.AppendArr = function (LookUpIndexKey,ArrVal) 
-  { 
+    var UserArr = [ArrVal];
     //Check to see if there is already data in the IndexedKey/Table
     var OldRowData = JSON.parse( localStorage.getItem(LookUpIndexKey) ); 
     
     if(!OldRowData)
     {
       //Add new data
-     localStorage.setItem(LookUpIndexKey,JSON.stringify(ArrVal));
+     localStorage.setItem(LookUpIndexKey,JSON.stringify(UserArr));
     } 
     else if(OldRowData.length >0)
     {      
       //Append data to old 
-      var NewData = jQuery.merge(ArrVal, OldRowData);
+      var NewData = jQuery.merge(UserArr, OldRowData);
       
       localStorage.setItem(LookUpIndexKey,JSON.stringify(NewData));    
     }
