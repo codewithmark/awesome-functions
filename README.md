@@ -1,10 +1,17 @@
- <h1 align="center">
+<h1 align="center">
+  <br/>
+  <img src="https://cdn.rawgit.com/jakubpawlowicz/clean-css/master/logo.v2.svg" alt="clean-css logo" width="525px"/>
+  <br/>
+  <br/>
+</h1>
+
+<h1 align="center">
  <hr>
   <img src="http://www.awesomefunctions.com/assets/awesome-functions-100x100.png" style="height:100px; width:100px"   alt="www-awesome-functions"> 
   <br/>
   <span>Awesome Functions</span>
  <hr> 
-</h1>
+ </h1>
 
  
 
