@@ -1,10 +1,16 @@
 
 #Awesome Functions
  <br/>
-<img src="http://www.awesomefunctions.com/assets/awesome-functions-100x100.png" style="height:100px; width:100px" class="img-responsive center-block" alt="www-awesome-functions-k2S07">
+
  
   <br/>
- 
+ <h1 align="center">
+  <span>Awesome Functions</span>
+  <br/>
+  <img src="http://www.awesomefunctions.com/assets/awesome-functions-100x100.png" style="height:100px; width:100px"   alt="www-awesome-functions">
+  <br/>
+  <br/>
+</h1>
 
  
 
