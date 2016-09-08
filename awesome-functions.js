@@ -1,6 +1,6 @@
 /*
  * Library Name: Awesome Functions
- * Version Number: 1.16.8.29
+ * Version Number: 1.16.9.8
  * Original Author: Mark Kumar
  * Documentation: http://awesomefunctions.com
  * Licensed under the MIT license
@@ -11,8 +11,8 @@
   php = function(){};  
   js = function(){};
 
-	//For Cookies
-	c =function(){}; 
+  //For Cookies
+  c =function(){}; 
 
   //For Local Storage Functions
   ls = function(){};
@@ -79,11 +79,11 @@
 			//Wrap it in an array in case you want to customize this to your liking
 			var DataArr =
 			{ 
-				'Status':data['Status'],
-				'Mobile':data['Mobile'],
-				'Browser':data['Browser'],
-				'BrowserVersionNum':data['BrowserVersionNum'],
-				'Platform':data['Platform'], 
+				'Status':data.Status,
+				'Mobile':data.Mobile,
+				'Browser':data.Browser,
+				'BrowserVersionNum':data.BrowserVersionNum,
+				'Platform':data.Platform, 
 			}  
 
 			//Set it for cookie
@@ -96,6 +96,56 @@
   }; 
 
   //--->User Device Access Function - End  
+
+	
+	//--->Short URL Function - Start
+  api.ShortURL = function(UserURL,ServiceCall,callback)   
+  {
+		var deferred = new jQuery.Deferred(); 
+    if (jQuery.isFunction(callback)) 
+    {
+      deferred.then(callback);
+    }
+		
+		var url;
+		if(ServiceCall !='')
+		{
+			var strServiceCall = ServiceCall.toLowerCase();
+			
+			if (strServiceCall =='bitly'|| strServiceCall =='tinyurl')
+			{
+				url = "https://apimk.com/shorturl?";
+				url +="callback=json";  
+				url += "&service_name="+strServiceCall;
+				url += "&url="+encodeURIComponent(UserURL);
+			}
+			else
+			{
+				url = "https://apimk.com/shorturl?";
+				url +="callback=json";  
+				url += "&service_name=bitly";
+				url += "&url="+encodeURIComponent(UserURL);
+			}
+		}
+		else
+		{
+			url = "https://apimk.com/shorturl?";
+			url +="callback=json";  
+			//url += "&service_name=bitly";
+			url += "&url="+encodeURIComponent(UserURL);
+		}
+		
+		
+		
+		//Make the api call	 
+		jQuery.getJSON(url, function(data, status)
+		{
+			deferred.resolve(data);
+		}); 
+    return deferred.promise();
+		
+	};
+ 	//--->Short URL Function - End  
     
 //--->API Call Functions - End  
   
@@ -1006,7 +1056,12 @@
 
   bs.ShowError = function (errorText,ElementObjID) 
   {
-    ElementObjID.after('<div id="derr" class="derr alert alert-danger  form-control" style="padding:5px;font-size:14px"  > <i class="fa fa-exclamation-triangle "></i>  '+ errorText+'</div>');
+		var strDiv = ''; 
+		strDiv += '<div class="derr">';		
+		strDiv += '<div class="alert alert-danger  form-control" style="padding:5px;font-size:14px"  > <i class="fa fa-exclamation-triangle "></i>  '+ errorText+'</div>';
+		strDiv += '</div>';
+		
+    ElementObjID.after(strDiv);
     ElementObjID.css( "background-color", "yellow");
     ElementObjID.focus();
   }
@@ -1023,7 +1078,7 @@
   bs.WaitingMsg = function (Msg)
   {
     var strDIV  = '';
-    strDIV  +=  '<div id="MsgBox" id="derr" class="derr bg-info alert alert-info derr" style="font-size: 40px;padding:10px;">';
+    strDIV  +=  '<div id="MsgBox"   class="derr bg-info alert alert-info derr" style="font-size: 40px;padding:10px;">';
     strDIV  +=  '<i class="fa fa-refresh fa-spin "></i> '+Msg+' ';
     strDIV  +=  '</div>';
     return strDIV;
@@ -1063,7 +1118,7 @@
 
   bs.CheckingMsg = function (ElementObjID,Msg)
   {
-    var AlertDIV= '<div id="derr" class="derr alert alert-warning" role="alert"> <i class="fa fa-spinner fa-spin"></i> '+Msg+'</div>';
+    var AlertDIV= '<div  class="derr alert alert-warning" role="alert"> <i class="fa fa-spinner fa-spin"></i> '+Msg+'</div>';
     ElementObjID.after(AlertDIV); 
   }
 
@@ -1224,7 +1279,7 @@
 
   frm.IsNoSpaces = function (value) 
   {
-    var regexp  = /^\S+$/i;
+    var regexp  = /^\S+$/i;	 
     return !regexp.test(value);
   }
 
@@ -1236,7 +1291,7 @@
 
   frm.IsURL = function (value) 
   {
-      var regexp = /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+      var regexp = /^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/i			
       return !regexp.test(value);
   }
 
@@ -1248,62 +1303,101 @@
 
   frm.IsBetweenNumber = function(value,Len)
   {
-    var Val = jQuery.trim(value);
+    var Val =  jQuery.trim(value) ;
     var Range = Len.split(',');
-    if(Val >= Range[0] && Val <= Range[1])
-    {
-      return Val;
-    }
+		
+		if(frm.IsNoSpaces(Val))
+		{
+			return true;
+		}
+		else if(frm.IsNumber(Val)  )
+ 		{
+			return true;
+		}
+		else if ( !(Val >= js.Int(Range[0]))   )
+		{
+			return true;
+		}
+		else if ( !(Val <= js.Int( Range[1]) )   )
+		{
+			return true;
+		}
+		
   }
 
   frm.IsLength = function(value,Len)
   {
-    var Val = jQuery.trim(value);
-
-    if(Len == Val.length)
-    {
-      return Val;
-    }
+    var Val = jQuery.trim(value); 
+		
+		if(frm.IsNoSpaces(Val))
+		{
+			return true;
+		}
+		else if(  ( js.Int(Len) != Val.length)  )
+ 		{
+			return true;
+		}
+ 
   }
-
+	
   frm.IsMinLength = function(value,Len)
   {
     var Val = jQuery.trim(value);
 
-    if(Len >= Val.length)
-    {
-      return Val;
-    }
+		if(frm.IsNoSpaces(Val))
+		{
+			return true;
+		}
+		else if(  !( js.Int(Len) <= Val.length)  )
+ 		{
+			return true;
+		}
+ 
   }
 
   frm.IsMaxLength = function(value,Len)
   {
     var Val = jQuery.trim(value);
 
-    if(Len <= Val.length)
-    {
-      return Val;
-    }
+		if(frm.IsNoSpaces(Val))
+		{
+			return true;
+		}
+		else if(  !( js.Int(Len) >= Val.length)  )
+ 		{
+			return true;
+		}
   }
  
-
-  frm.IsRangeLength = function(value,Len)
+	frm.IsRangeLength = function(value,Len)
   {
     var Val = jQuery.trim(value);
     var Range = Len.split(',');
 
-    if(Val.length >= Range[0] && Val.length <= Range[1])
-    {
-      return Val;
-    }
+		if(frm.IsNoSpaces(Val))
+		{
+			return true;
+		}
+		else if ( !(Val.length >= js.Int(Range[0]))   )
+		{
+			return true;
+		}
+		else if ( !(Val.length <= js.Int( Range[1]) )   )
+		{
+			return true;
+		} 
   }
-
-  frm.IsEqualTo = function(value,equalTo)
+ 
+  frm.IsEqualTo = function(Val,equalTo)
   {   
-    if(value == equalTo)
-    {
-      return value;
-    }
+		if(frm.IsNoSpaces(Val))
+		{
+			return true;
+		}
+		else if (Val != equalTo)  
+		{
+			return true;
+		} 
   } 
 //--->Form Functions - End
 	
