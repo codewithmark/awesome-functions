@@ -11,8 +11,8 @@
   php = function(){};  
   js = function(){};
 
-  //For Cookies
-  c =function(){}; 
+	//For Cookies
+	c =function(){}; 
 
   //For Local Storage Functions
   ls = function(){};
@@ -1411,21 +1411,23 @@
 
 
 //--->Enter Key Plugin - Start	
-$.fn.enterKey = function (fnc) 
+;(function ( $, window, document, undefined ) 
 {
-    return this.each(function () 
-    {
-        $(this).keypress(function (ev) 
-        {
-            var keycode = (ev.keyCode ? ev.keyCode : ev.which);
-            if (keycode == '13') 
-            {
-                fnc.call(this, ev);
-            }
-        })
-    })
-}
-	
+	$.fn.enterKey = function (fnc) 
+	{
+			return this.each(function () 
+			{
+					$(this).keypress(function (ev) 
+					{
+							var keycode = (ev.keyCode ? ev.keyCode : ev.which);
+							if (keycode == '13') 
+							{
+									fnc.call(this, ev);
+							}
+					})
+			})
+	}
+}( jQuery, window, document));	
 //--->Enter Key Plugin - End	
 	
 	
@@ -1447,7 +1449,7 @@ $.fn.enterKey = function (fnc)
       textDataOverride: 'data-override',
       textExtractor: null
     };
-    opts = $.extend(defaults, opts);
+    opts = jQuery.extend(defaults, opts);
 
     var notNull = function(value) {
       return value !== undefined && value !== null;
@@ -1455,14 +1457,14 @@ $.fn.enterKey = function (fnc)
 
     var ignoredColumn = function(index) {
       if( notNull(opts.onlyColumns) ) {
-        return $.inArray(index, opts.onlyColumns) === -1;
+        return jQuery.inArray(index, opts.onlyColumns) === -1;
       }
-      return $.inArray(index, opts.ignoreColumns) !== -1;
+      return jQuery.inArray(index, opts.ignoreColumns) !== -1;
     };
 
     var arraysToHash = function(keys, values) {
       var result = {}, index = 0;
-      $.each(values, function(i, value) {
+      jQuery.each(values, function(i, value) {
         // when ignoring columns, the header option still starts
         // with the first defined column
         if ( index < keys.length && notNull(value) ) {
@@ -1480,13 +1482,13 @@ $.fn.enterKey = function (fnc)
         override = $cell.attr(opts.textDataOverride);
       // don't use extractor for header cells
       if ( extractor === null || isHeader ) {
-        return $.trim( override || ( opts.allowHTML ? $cell.html() : cell.textContent || $cell.text() ) || '' );
+        return jQuery.trim( override || ( opts.allowHTML ? $cell.html() : cell.textContent || $cell.text() ) || '' );
       } else {
         // overall extractor function
         if ( $.isFunction(extractor) ) {
           return $.trim( override || extractor(cellIndex, $cell) );
-        } else if ( typeof extractor === 'object' && $.isFunction( extractor[cellIndex] ) ) {
-          return $.trim( override || extractor[cellIndex](cellIndex, $cell) );
+        } else if ( typeof extractor === 'object' && jQuery.isFunction( extractor[cellIndex] ) ) {
+          return jQuery.trim( override || extractor[cellIndex](cellIndex, $cell) );
         }
       }
       // fallback
@@ -1580,7 +1582,7 @@ $.fn.enterKey = function (fnc)
           }
         }
       });
-      $.each(tmpArray, function( i, row ){
+      jQuery.each(tmpArray, function( i, row ){
         if (notNull(row)) {
           // remove ignoredColumns / add onlyColumns
           var newRow = notNull(opts.onlyColumns) || opts.ignoreColumns.length ?
