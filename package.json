@@ -21,9 +21,9 @@
   ],
   "readmeFilename": "README.md",
   "author": "Code With Mark",
-  "license": "AML",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/codewithmark/awesome-functions/issues"
   },
-  "homepage": "http://awesomefunctions.com/"
+  "homepage": "http://awesomefunctions.com"
 }
